@@ -2,6 +2,7 @@ const express = require('express');
 const morgan = require('morgan');
 const bodyParser = require('body-parser');
 const cookieParser = require('cookie-parser');
+const authRouter = require('./routes/auth');
 const userRouter = require('./routes/user');
 require('./db/mongoose');
 // To use env varialbles
@@ -15,6 +16,7 @@ app.use(bodyParser.json());
 app.use(cookieParser());
 
 //----- routes middleware
+app.use("/api", authRouter);
 app.use("/api", userRouter);
 
 const port = process.env.PORT || 5000;

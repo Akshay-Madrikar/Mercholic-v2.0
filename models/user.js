@@ -59,12 +59,12 @@ userSchema.methods.toJSON = function() {
 userSchema.statics.findByCredentials = async (email, password) => {
     const user = await User.findOne({ email });
     if(!user) {
-        throw new Error({error: 'User with that email does not exists. Please signup!'});
+        throw new Error();
     };
 
     const isMatch = await bcryptjs.compare(password, user.password);
     if(!isMatch) {
-        throw new Error({error: 'Email or Password do not match'});
+        throw new Error();
     };
 
     return user;
