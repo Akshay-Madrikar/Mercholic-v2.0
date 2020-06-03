@@ -13,7 +13,7 @@ exports.productById = async(req ,res, next, id) => {
         req.product = product;
         next();
     } catch(error) {
-        res.status(400).json({
+        res.status(404).json({
             error: 'No such product!'
         });
     }

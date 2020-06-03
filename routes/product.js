@@ -6,10 +6,11 @@ const { productById, read, remove, update } = require('../controllers/product');
 
 const router = express.Router();
 
-router.get('/product/:productId', read);
+
 router.post('/product/create/:userId', requiredSignin, isAuth, isAdmin, create);
-router.delete('/product/:productId/:userId', requiredSignin, isAuth, isAdmin, remove);
+router.get('/product/:productId', read);
 router.put('/product/:productId/:userId', requiredSignin, isAuth, isAdmin, update);
+router.delete('/product/:productId/:userId', requiredSignin, isAuth, isAdmin, remove);
 
 router.param('userId', userById);
 router.param('productId', productById);
