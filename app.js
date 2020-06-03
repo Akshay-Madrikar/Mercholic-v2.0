@@ -1,5 +1,6 @@
 const express = require('express');
 const morgan = require('morgan');
+const cors = require('cors');
 const bodyParser = require('body-parser');
 const cookieParser = require('cookie-parser');
 const authRouter = require('./routes/auth');
@@ -16,6 +17,7 @@ const app = express();
 app.use(morgan('dev'));
 app.use(bodyParser.json());
 app.use(cookieParser());
+app.use(cors());
 
 //----- routes middleware
 app.use("/api", authRouter);

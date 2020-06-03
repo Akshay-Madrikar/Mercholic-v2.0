@@ -1,5 +1,5 @@
 const express = require('express');
-const { userById } = require('../controllers/user');
+const { userById, read, update } = require('../controllers/user');
 const { requiredSignin, 
         isAuth, 
         isAdmin 
@@ -11,7 +11,10 @@ router.get('/secret/:userId', requiredSignin, isAuth, isAdmin, (req, res) => {
     res.json({
         user: req.profile
     })
-})
+});
+
+router.get('/user/:userId', requiredSignin, isAuth, read);
+router.put('/user/:userId', requiredSignin, isAuth, update);
 
 // any-time there will be userId in params
 // this route/middleware will be called
