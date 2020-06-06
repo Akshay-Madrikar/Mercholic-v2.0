@@ -48,7 +48,6 @@ const AddCategory = () => {
         setError('');
         setSuccess(false);
         createCategory();
-        event.target.value = '';
     }
 
     const newCategoryForm = () => (

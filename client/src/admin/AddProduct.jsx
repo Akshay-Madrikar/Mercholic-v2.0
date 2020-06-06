@@ -37,12 +37,81 @@ const AddProduct = () => {
         formData
     } = values;
 
-    const handleChange = (name) => (event) => {
+    const { user, token } = isAuthenticated();
 
-    }
+    useEffect(() => {
+        getCategories();
+    }, []);
+
+    const handleChange = (name) => (event) => {
+        const value = name === 'photo' ? event.target.files[0] : event.target.value;
+        formData.set(name, value)
+        setValues({...values, [name]: value});
+    };
+
+    
+    const handleSubmit = (event) => {
+        event.preventDefault();
+        setValues({...values, error: '', loading: true});
+        createProduct();
+    };
+
+    const createProduct = async () => {
+        try {
+            const productData = await fetch(`${API}/product/create/${user._id}`, {
+                method: "POST",
+                headers: {
+                    Accept: 'application/json',
+                    "Authorization": "Bearer "+token
+                },
+                body: formData
+            });
+            const productDataJSON = await productData.json();
+            if(productDataJSON.error) {
+               setValues({...values, error: productDataJSON.error});
+            } else {
+                setValues({
+                    ...values,
+                    name: '',
+                    description: '',
+                    photo: '',
+                    price: '',
+                    quantity: '',
+                    loading: false,
+                    createdProduct: productDataJSON.name
+                })
+            };
+            console.log(createdProduct)  
+        } catch(error) {
+            console.log(error);
+        } 
+    };
+
+    const getCategories = async() => {
+        try {
+            const categories = await fetch(`${API}/categories`, {
+                method: "GET"
+            });
+            
+            const categoriesJSON = await categories.json();
+            if(categoriesJSON.error) {
+                setValues({...values, error: categoriesJSON.error});
+             } else {
+                 // load categories from backend and set form data
+                 setValues({
+                     ...values, 
+                     categories: categoriesJSON, 
+                     formData: new FormData()
+                });
+             }
+        } catch(error) {
+            console.log(error);
+        }
+    };
+
 
     const newPostForm = () => (
-        <form className="mb-3">
+        <form className="mb-3" onSubmit={handleSubmit}>
             <h4>Post Photo</h4>
             <div className="form-group">
                 <label className="btn btn-secondary">
@@ -88,7 +157,11 @@ const AddProduct = () => {
                     value={category} 
                     onChange={handleChange('category')}
                 >
-                    <option value="5ed74e32ffa45a0eb096f539">Rapper</option>
+                    <option>Select category</option>
+                    { categories && categories.map((category, index) => (
+                        <option key={index} value={category._id}>{category.name}</option>
+                    )) }
+                    
                 </select>
             </div>
 
@@ -100,6 +173,7 @@ const AddProduct = () => {
                     value={shipping} 
                     onChange={handleChange('shipping')}
                 >
+                    <option>Select shipping status</option>
                     <option value="0">No</option>
                     <option value="1">Yes</option>
                 </select>
@@ -119,74 +193,28 @@ const AddProduct = () => {
         </form>
     );
 
-    const { user, token } = isAuthenticated();
+    const showSuccess = () => (
+        <div className="alert alert-info" style={{ display: createdProduct ? '' : 'none' }}>
+            <h2>{`${name}`} is created!</h2>
+        </div>
+    );
 
-    // const createCategory = async () => {
-    //     try {
-    //         const productData = await fetch(`${API}/product/create/${user._id}`, {
-    //             method: "POST",
-    //             headers: {
-    //                 Accept: 'application/json',
-    //                 "Authorization": "Bearer "+token
-    //             }
-    //         });
-    //         const productDataJSON = await productData.json();
-    //         if(productDataJSON.error) {
-    //             setError(true);
-    //             setError(productDataJSON.error)
-    //         } else {
-    //             setError('');
-    //             setSuccess(true);
-    //         };  
-    //     } catch(error) {
-    //         console.log(error);
-    //     } 
-    // };
-    
-    // const handleChange = (event) => {
-    //     setError('');
-    //     setName(event.target.value);
-    // }
+    const showError = () => (
+        <div className="alert alert-danger" style={{ display: error ? '' : 'none' }}>
+            {error}
+        </div>
+    );
 
-    // const handleSubmit = (event) => {
-    //     event.preventDefault();
-    //     setError('');
-    //     setSuccess(false);
-    //     createCategory();
-    //     event.target.value = '';
-    // }
-
-    // const newCategoryForm = () => (
-    //     <form onSubmit={handleSubmit}>
-    //         <div className="form-group">
-    //             <label className="text-muted">Name</label>
-    //             <input 
-    //                 type="text" 
-    //                 className="form-control" 
-    //                 value={name} 
-    //                 onChange={handleChange} 
-    //                 autoFocus
-    //                 required
-    //             />
-    //         </div>
-    //         <button className="btn btn-outline-primary">Create Category</button>
-    //     </form>
-    // );
-
-    // const showSuccess = () => {
-    //     if(success) {
-    //         return <h2 className="text-success">{name} is created</h2>
-    //     };
-    // };
-
-    // const showError = () => {
-    //     if(error) {
-    //         return <h2 className="text-danger">{name} category already exists!</h2>
-    //     };
-    // };
+    const showLoading = () => (
+        loading && (
+            <div className="alert alert-success">
+                <h2>Loading...</h2>
+            </div>
+        )
+    );
 
     const goBack = () => (
-        <div className="mt-5">
+        <div className="mt-4 mb-2">
             <Link to="/admin/dashboard" className="text-warning">
                 Back to dashboard
             </Link>
@@ -200,6 +228,9 @@ const AddProduct = () => {
         >
             <div className="row">
                 <div className="col-md-8 offset-md-2">
+                    {showLoading()}
+                    {showError()}
+                    {showSuccess()}
                     {newPostForm()}
                     {goBack()}
                 </div>
