@@ -219,7 +219,7 @@ exports.listBySearch = async (req, res) => {
             }
         }
      
-        const products = await Product.find(findArgs)
+        const productsBySearch = await Product.find(findArgs)
             .select("-photo")
             .populate("category")
             .sort([[sortBy, order]])
@@ -228,8 +228,8 @@ exports.listBySearch = async (req, res) => {
             .exec();
 
         res.json({
-            size: products.length,
-            products
+            size: productsBySearch.length,
+            productsBySearch
         });
     } catch(error) {
         res.status(400).json({
