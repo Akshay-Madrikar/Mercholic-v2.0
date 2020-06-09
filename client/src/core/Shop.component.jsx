@@ -18,7 +18,8 @@ const Shop = () => {
     const [categories, setCategories] = useState([]);
     const [limit, setLimit] = useState(6);
     const [skip, setSkip] = useState(0);
-    const [filteredResults, setFilteredResults] = useState(0);
+    const [size, setSize] = useState(0);
+    const [filteredResults, setFilteredResults] = useState([]);
 
     const getCategories = async() => {
         try {
@@ -58,10 +59,52 @@ const Shop = () => {
                 setError(productsJSON.error)
             } else {
                 setFilteredResults(productsJSON.productsBySearch);
+                setSize(productsJSON.size);
+                setSkip(0);
             };  
         } catch(error) {
             console.log(error);
         } 
+    };
+
+    const loadMore = async () => {
+        try {
+            let toSkip = skip + limit;
+
+            const data = {
+                limit,
+                skip: toSkip,
+                filters: myFilters.filters
+            }
+            const products = await fetch(`${API}/products/by/search`, {
+                method: "POST",
+                headers: {
+                    Accept: 'application/json',
+                    "Content-Type": "application/json"
+                },
+                body: JSON.stringify(data)
+            });
+            const productsJSON = await products.json();
+            if(productsJSON.error) {
+                setError(productsJSON.error)
+            } else {
+                setFilteredResults([...filteredResults, ...productsJSON.productsBySearch]);
+                setSize(productsJSON.size);
+                setSkip(toSkip);
+            };  
+        } catch(error) {
+            console.log(error);
+        } 
+    };
+
+    const loadMoreButton = () => {
+        return (
+            size > 0 && size >= limit && (
+                <button onClick={loadMore} className="btn btn-warning mb-5">
+                    Load more
+                </button>
+            )
+        );
     };
 
     const loadFilteredResults = (newFilters) => {
@@ -114,8 +157,14 @@ const Shop = () => {
                 <div className="col-8">
                     <h2 className="mb-4">Products</h2>
                     <div className="row">
-                     {console.log(typeof (filteredResults))}
+                     {/* {JSON.stringify(filteredResults)} */}
+
+                     { filteredResults.map((product, index) => (
+                             <Card key={index} product={product}/>
+                     ))}
                     </div>
+                    <hr/>
+                    {loadMoreButton()}
                 </div>
             </div>
         </Layout>
