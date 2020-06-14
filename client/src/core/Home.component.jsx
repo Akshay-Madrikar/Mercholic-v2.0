@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import Layout from './Layout.component';
 import { API } from '../config';
 import Card from './Card.component';
-
+import Search from './Search.component';
 
 const Home = () => {
 
@@ -52,7 +52,7 @@ const Home = () => {
 
     return (
         <Layout title="Home" description="MERN stack project" className="container-fluid">
-            
+            <Search />
             <h2 className="mb-4">New Arrivals</h2>
             <div className="row">
                 { productsByArrival.map((product, index) => (

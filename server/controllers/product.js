@@ -38,8 +38,6 @@ exports.remove = async (req, res) => {
             error: errorHandler(error)
         });
     }
-    
-
 };
 
 exports.create =  (req, res) => {
@@ -244,4 +242,31 @@ exports.photo = (req ,res ,next) => {
         return res.send(req.product.photo.data);
     };
     next();
+};
+
+exports.listSearch = async (req, res) => {
+    // To hold search and category values 
+    let query = {};
+    //assign search value to query.name
+    if(req.query.search) {
+        query.name = {
+            $regex: req.query.search,
+            $options: 'i'
+        }
+
+        //assign category value to  query.category
+        if(req.query.category && req.query.category !== 'All') {
+            query.category = req.query.category
+        }
+        
+        try {
+            //Now we'll find products based on search and category
+            const products = await Product.find(query).select('-photo');
+            res.status(200).json(products);
+        } catch (error) {
+            res.status(400).json({
+                error: 'Products not found!'
+            });
+        }
+    }
 };
