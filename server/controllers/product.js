@@ -6,7 +6,7 @@ const { errorHandler } = require('../helpers/dbErrorHandler');
 
 exports.productById = async(req ,res, next, id) => {
     try{
-        const product = await Product.findById(id).exec();
+        const product = await Product.findById(id).populate('category').exec();
         if(!product) {
             throw new Error();
         }
