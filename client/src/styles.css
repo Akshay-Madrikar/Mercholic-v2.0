@@ -18,8 +18,12 @@
     }
 }
 
-/* single product page - product name */
+/* cart-icon */
+.cart-badge {
+   
+}
 
+/* single product page - product name */
 .name {
     background: lightslategrey;
     color: #fff;

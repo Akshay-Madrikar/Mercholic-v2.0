@@ -64,11 +64,11 @@ const Product = (props) => {
                 }
                 </div>
                
-               <div className="col-4">
-                   <h4>Related products</h4>
+               <div className="col-4" style={{borderStyle: 'ridge'}}>
+                   <h4 className="p-2">Related products</h4>
                    { relatedProduct.map((product, index) => (
-                       <div className="mb-3">
-                           <Card key={index} product={product}/>
+                       <div key={index} className="mb-3">
+                           <Card product={product}/>
                        </div>
                    )) }
                </div>
