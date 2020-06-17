@@ -43,7 +43,7 @@ const Cart = () => {
     return (
         <Layout title="Shopping Cart" description="Manage your cart items and continue shopping..." className="container-fluid">
             <div className="row">
-                <div className="col-6">
+                <div className="col-6 pb-4">
                     { items.length > 0 ? showItems(items) : showEmptyMessage() }
                 </div>
 

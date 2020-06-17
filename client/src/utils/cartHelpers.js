@@ -52,7 +52,7 @@ export const updateItem = (productId, count) => {
             };
         });
 
-        localStorage.setItem('cart', cart);
+        localStorage.setItem('cart', JSON.stringify(cart));
     };
 };
 
@@ -70,7 +70,7 @@ export const removeItem = (productId) => {
             };
         });
 
-        localStorage.setItem('cart', cart);
+        localStorage.setItem('cart', JSON.stringify(cart));
     };
 
     return cart;

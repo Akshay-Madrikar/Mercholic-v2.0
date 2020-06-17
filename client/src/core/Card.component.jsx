@@ -97,7 +97,7 @@ const Card = ({
     };
 
     const showCartUpdateOptions = (cartUpdate) => {
-        return ( cartUpdate && (
+        return cartUpdate && (
             <div className="input-group mb-3">
                 <div className="input-group-prepend">
                     <span className="input-group-text">Adjust Quantity</span>
@@ -109,7 +109,7 @@ const Card = ({
                     onChange={handleChange(product._id)}
                 />
             </div>
-        ));
+        );
     };
 
     return (
