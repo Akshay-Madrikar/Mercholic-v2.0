@@ -2,12 +2,22 @@ import React from 'react';
 import {Link, Redirect} from 'react-router-dom';
 import moment from 'moment';
 import ShowImage from './ShowImage.component';
-import { addItem } from '../utils/cartHelpers';
+import { addItem, updateItem, removeItem } from '../utils/cartHelpers';
 import { useState } from 'react';
 
-const Card = ({ product, showViewProductButton = true }) => {
+const Card = ({ 
+        product, 
+        showDetails = true, 
+        showViewProductButton = true, 
+        showAddToCartButton = true,
+        cartUpdate = false,
+        showRemoveProductButton = false,
+        setRun = f => f,
+        run = undefined
+    }) => {
 
     const [redirect, setRedirect] = useState(false); 
+    const [count, setCount] = useState(product.count); 
 
     const showViewButton = (showViewProductButton) => {
         return (
@@ -31,14 +41,42 @@ const Card = ({ product, showViewProductButton = true }) => {
         if(redirect) {
             return <Redirect to="/cart"/>
         }
+    };
+
+    const showProductDetails = (showDetails) => {
+        return ( showDetails && (
+            <>
+            <p className="black-9">
+                Category: {product.category && product.category.name}
+            </p>
+            <p className="black-8">
+                Added on {moment(product.createdAt).fromNow()}
+            </p>
+            {showStock(product.quantity)}
+            <br/>
+            </>
+        ))
     }
 
-    const showAddToCartButton = () => {
-        return (
+    const showAddToCart = (showAddToCartButton) => {
+        return ( showAddToCartButton && (
             <button onClick={addToCart} className="btn btn-outline-warning mt-2 mb-2">
                 Add To Cart
             </button>
-        );
+        ));
+    };
+
+    const showRemove = (showRemoveProductButton) => {
+        return ( showRemoveProductButton && (
+            <button 
+                onClick={() => {
+                    removeItem(product._id);
+                    setRun(!run);
+                }} 
+                className="btn btn-outline-danger mt-2 mb-2">
+                Remove Product
+            </button>
+        ));
     };
 
     const showStock = (quantity) => {
@@ -47,6 +85,31 @@ const Card = ({ product, showViewProductButton = true }) => {
         ) : (
             <span className="badge badge-primary badge-pill">Out of Stock</span>
         )
+    };
+
+    const handleChange = (productId) => (event) => {
+        setRun(!run);
+        setCount(event.target.value < 1 ? 1 : event.target.value);
+
+        if(event.target.value >= 1) {
+            updateItem(productId, event.target.value)
+        };
+    };
+
+    const showCartUpdateOptions = (cartUpdate) => {
+        return ( cartUpdate && (
+            <div className="input-group mb-3">
+                <div className="input-group-prepend">
+                    <span className="input-group-text">Adjust Quantity</span>
+                </div>    
+                <input 
+                    type="number" 
+                    className="form-control" 
+                    value={count} 
+                    onChange={handleChange(product._id)}
+                />
+            </div>
+        ));
     };
 
     return (
@@ -61,19 +124,15 @@ const Card = ({ product, showViewProductButton = true }) => {
                     <p className="black-10">
                         &#x20b9;{product.price}
                     </p>
-                    <p className="black-9">
-                        Category: {product.category && product.category.name}
-                    </p>
-                    <p className="black-8">
-                        Added on {moment(product.createdAt).fromNow()}
-                    </p>
-
-                    {showStock(product.quantity)}
-                    <br/>
+                    {showProductDetails(showDetails)}
 
                     {showViewButton(showViewProductButton)}
 
-                    {showAddToCartButton()}
+                    {showAddToCart(showAddToCartButton)}
+
+                    {showRemove(showRemoveProductButton)}
+
+                    {showCartUpdateOptions(cartUpdate)}
                 </div>
             </div>
     );
