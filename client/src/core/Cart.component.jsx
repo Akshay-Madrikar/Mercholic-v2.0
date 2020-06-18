@@ -50,7 +50,7 @@ const Cart = () => {
                 <div className="col-6">
                     <h2 className="mb-4">Your Cart Summary</h2>
                     <hr />
-                    <Checkout products={items} />
+                    <Checkout products={items} setRun={setRun} run={run}/>
                 </div>
             </div>
         </Layout>
