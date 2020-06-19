@@ -270,3 +270,31 @@ exports.listSearch = async (req, res) => {
         }
     }
 };
+
+// handle sold and quantity of products before creating order
+exports.handleQuantity = async(req, res, next) => {
+    try {
+        let bulkOps = req.body.order.products.map((item) => {
+            return {
+                updateOne: {
+                    filter: { 
+                        _id: item._id 
+                    },
+                    update: {
+                        $inc: {
+                            quantity: -item.count,
+                            sold: +item.count
+                        }
+                    }
+                }
+            }
+        });
+    
+        await Product.bulkWrite(bulkOps, {});
+        next();
+    } catch(error) {
+        res.status(400).json({
+            error: 'Could not update product!'
+        });
+    }
+};
