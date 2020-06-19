@@ -7,12 +7,14 @@ import { isAuthenticated } from '../utils';
 const Orders = () => {
 
     const [orders, setOrders] = useState([]);
+    const [loading, setLoading] = useState(false);
     const [statusValues, setStatusValues] = useState([]);
 
     const {user, token} = isAuthenticated();
     
     const loadOrders = async (userId, token) => {
         try {
+            setLoading(true);
             const orders = await fetch(`${API}/order/list/${userId}`, {
                 method: "GET",
                 headers: {
@@ -25,6 +27,7 @@ const Orders = () => {
                 console.log(ordersJSON.error)
             } else {
                 setOrders(ordersJSON);
+                setLoading(false);
             }
         } catch(error) {
             console.log(error);
@@ -78,17 +81,15 @@ const Orders = () => {
         loadOrderStatusValues(user._id, token);
     }, []);
 
-    const showOrders = () => {
-        if(orders.length > 0) {
-            return (
-                <h1 className="text-info display-2">
-                    Total Orders: {orders.length}
-                </h1>
-            );
-        } else {
-            return <h1 className="text-danger">No orders</h1>
-        }
-    };
+    const showOrders = () => (
+        orders.length > 0 ?  (
+            <h1 className="text-info display-2">
+                Total Orders: {orders.length}
+            </h1>
+        ) : (
+            <h1 className="text-danger">No orders</h1>
+        )
+    );
 
     const showInput = (key, value) => (
         <div className="input-group mb-2 mr-sm-2">
@@ -123,10 +124,15 @@ const Orders = () => {
         </div>
     );
 
+    const showLoading = (loading) => (
+        loading && <h2 className="text-danger">Loading...</h2>
+    );
+
     return (
         <Layout title="Orders" description="Manage all orders" className="container-fluid">
             <div className="row">
                 <div className="col-md-8 offset-md-2">
+                    {showLoading(loading)}
                     {showOrders()}
                     
                     {orders.map((order, index) => {

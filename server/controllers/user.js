@@ -1,4 +1,6 @@
 const User = require('../models/user');
+const Order = require('../models/order');
+const { errorHandler } = require('../helpers/dbErrorHandler');
 
 exports.userById = async (req, res ,next , id) => {
     try{
@@ -75,6 +77,20 @@ exports.addPurchaseToUserHistory = async (req, res, next) => {
     } catch(error) {
         res.status(400).json({
             error: 'Could not update user purchase history!'
+        });
+    }
+};
+
+exports.purchaseHistory = async (req, res) => {
+    try{
+        const orderHistory = await Order.find({ user: req.profile._id })
+                                        .populate('user', '_id name')
+                                        .sort('-created')
+                                        .exec();
+        res.status(200).json(orderHistory);
+    } catch(error) {
+        res.status(400).json({
+            error: 'Unable to fetch history'
         });
     }
 };
