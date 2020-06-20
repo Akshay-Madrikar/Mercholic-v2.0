@@ -10,13 +10,14 @@ const Dashboard = () => {
     const [history, setHistory] = useState([]);
     const {user: { _id, name, email, role}} = isAuthenticated();
     const token = isAuthenticated().token;
+    console.log(token)
 
-    const init = (userId, token) => {
-        getPurchaseHistory(userId, token)
-    };
+    // const init = (userId, token) => {
+    //     getPurchaseHistory(userId, token)
+    // }; 
 
     useEffect(() => {
-        init(_id, token);
+        getPurchaseHistory(_id, token);
     }, []);
 
     const getPurchaseHistory = async (userId, token) => {
@@ -24,7 +25,7 @@ const Dashboard = () => {
             const historyData = await fetch(`${API}/orders/by/user/${userId}`, {
                 method: "GET",
                 headers: {
-                    Accept: 'application/json',
+                    Accept: "application/json",
                     "Content-Type": "application/json",
                     Authorization: `Bearer ${token}`
                 }
@@ -79,18 +80,34 @@ const Dashboard = () => {
                             return (
                                 <div>
                                     <hr />
-                                    {h.products.map((p, i) => {
-                                        return (
-                                            <div key={i}>
-                                                <h6>Product name: {p.name}</h6>
-                                                <h6>Product price: ${p.price}</h6>
-                                                <h6>
-                                                    Purchased date:{" "}
-                                                    {moment(p.createdAt).fromNow()}
-                                                </h6>
-                                            </div>
-                                        );
-                                    })}
+                                    <h4 className="text-secondary">Transaction ID: {h.transaction_id}</h4>
+                                    <h5 className="text-info">Order Status: {h.status}</h5>
+                                    { h.products.length > 1 ? 
+                                        h.products.map((p, i) => {
+                                            return (
+                                                <div key={i}>
+                                                    <h6>Product name: {p.name}</h6>
+                                                    <h6>Product price: ${p.price}</h6>
+                                                    <h6>
+                                                        Purchased date:{" "}
+                                                        {moment(p.createdAt).fromNow()}
+                                                    </h6>
+                                                    <hr style={{borderColor: 'blue', border: 'dashed'}}/>
+                                                </div>
+                                            );
+                                        }) : 
+                                        h.products.map((p, i) => {
+                                            return (
+                                                <div key={i}>
+                                                    <h6>Product name: {p.name}</h6>
+                                                    <h6>Product price: ${p.price}</h6>
+                                                    <h6>
+                                                        Purchased date:{" "}
+                                                        {moment(p.createdAt).fromNow()}
+                                                    </h6>
+                                                </div>
+                                            );
+                                        })}
                                 </div>
                             );
                         })}

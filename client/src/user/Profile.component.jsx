@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import { Link } from 'react-router-dom';
 import Layout from '../core/Layout.component';
 import { isAuthenticated, updateUser } from '../utils';
 import { API } from '../config';
@@ -52,7 +53,7 @@ const Profile = ({ match }) => {
     const updateUserProfile = async (userId, token, userData) => {
         try {
             const user = await fetch(`${API}/user/${userId}`, {
-                method: "PUT",
+                method: "PATCH",
                 headers: {
                     Accept: 'application/json',
                     "Content-Type": "application/json",
@@ -122,7 +123,16 @@ const Profile = ({ match }) => {
             </div>
 
             <button className="btn btn-primary">Submit</button>
+            {goBack()}
         </form>
+    );
+
+    const goBack = () => (
+        <div className="pt-2">
+            <Link to="/user/dashboard" className="text-warning">
+                Back to dashboard
+            </Link>
+        </div>
     );
 
     return (

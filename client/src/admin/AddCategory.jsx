@@ -85,7 +85,7 @@ const AddCategory = () => {
                 Back to dashboard
             </Link>
         </div>
-    )
+    );
 
     return (
         <Layout

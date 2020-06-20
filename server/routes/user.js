@@ -14,7 +14,7 @@ router.get('/secret/:userId', requiredSignin, isAuth, isAdmin, (req, res) => {
 });
 
 router.get('/user/:userId', requiredSignin, isAuth, read);
-router.put('/user/:userId', requiredSignin, isAuth, update);
+router.patch('/user/:userId', requiredSignin, isAuth, update);
 router.get('/orders/by/user/:userId', requiredSignin, isAuth, purchaseHistory);
 
 // any-time there will be userId in params
