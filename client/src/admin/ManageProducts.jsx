@@ -62,7 +62,7 @@ const ManageProducts = () => {
             className="container-fluid"
         >
             <div className="row">
-                <div className="col-12">
+                <div className="col-12 m-2">
                     <ul className="list-group">
                         {products.map((product,index) => (
                             <li key={index} className="list-group-item d-flex justify-content-between align-items-center">

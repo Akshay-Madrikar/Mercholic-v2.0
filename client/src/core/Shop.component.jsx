@@ -140,6 +140,12 @@ const Shop = () => {
         return arr;
     };
 
+    const showError = (error) => (
+        <div className="alert alert-danger" style={{ display: error ? '' : 'none' }}>
+            {error}
+        </div>
+    );
+
     return (
         <Layout title="Shop Page" description="Shop OG merch of your choice" className="container-fluid">
             <div className="row">
@@ -157,6 +163,7 @@ const Shop = () => {
                 <div className="col-8">
                     <h2 className="mb-4">Products</h2>
                     <div className="row">
+                        {showError(error)}
                      {/* {JSON.stringify(filteredResults)} */}
 
                      { filteredResults.map((product, index) => (

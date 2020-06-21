@@ -33,7 +33,11 @@ const Card = ({
 
     const addToCart = () => {
         addItem(product, () => {
-            setRedirect(true);
+            if(product.quantity >= 1){
+                setRedirect(true);
+            } else {
+                alert('Product out of stock! Grab it while in stock :)');
+            }
         });
     };
 

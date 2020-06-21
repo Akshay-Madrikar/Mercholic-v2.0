@@ -48,11 +48,18 @@ const Home = () => {
     useEffect(() => {
         loadProductsBySell();
         loadProductsByArrival();
-    }, [])
+    }, []);
+
+    const showError = (error) => (
+        <div className="alert alert-danger" style={{ display: error ? '' : 'none' }}>
+            {error}
+        </div>
+    );
 
     return (
         <Layout title="Home" description="MERN stack project" className="container-fluid">
             <Search />
+            {showError(error)}
             <h2 className="mb-4">New Arrivals</h2>
             <div className="row">
                 { productsByArrival.map((product, index) => (

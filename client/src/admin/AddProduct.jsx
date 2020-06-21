@@ -33,7 +33,6 @@ const AddProduct = () => {
         loading,
         error,
         createdProduct,
-        redirectToProfile,
         formData
     } = values;
 

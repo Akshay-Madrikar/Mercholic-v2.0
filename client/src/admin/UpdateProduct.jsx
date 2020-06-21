@@ -33,7 +33,6 @@ const UpdateProduct = ({ match }) => {
         loading,
         error,
         createdProduct,
-        redirectToProfile,
         formData
     } = values;
 

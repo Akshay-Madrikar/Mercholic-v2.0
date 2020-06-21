@@ -49,6 +49,11 @@ const Product = (props) => {
         loadSingleProduct(productId);
     }, [props]);
 
+    const showError = (error) => (
+        <div className="alert alert-danger" style={{ display: error ? '' : 'none' }}>
+            {error}
+        </div>
+    );
 
     return (
         <Layout 
@@ -58,6 +63,7 @@ const Product = (props) => {
         >
             <div className="row">
                 <div className="col-8">
+                {showError(error)}
                 {
                    product && product.description &&
                    <Card product={product} showViewProductButton={false}/>
