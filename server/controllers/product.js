@@ -93,12 +93,13 @@ exports.update =  (req, res) => {
                 });
             };
 
-            const { name, description, price, category, quantity, shipping } = fields;
-            if(!name || !description || !price || !category || !quantity || !shipping) {
-                return res.status(400).json({
-                    error: 'All fields are required!'
-                });
-            };
+            // ------------Can't restrict to update every field---------
+            // const { name, description, price, category, quantity, shipping } = fields;
+            // if(!name || !description || !price || !category || !quantity || !shipping) {
+            //     return res.status(400).json({
+            //         error: 'All fields are required!'
+            //     });
+            // };
 
             let product = req.product;
 
