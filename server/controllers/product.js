@@ -157,6 +157,7 @@ exports.listRelated = async(req, res) => {
     try{
         let limit = req.query.limit ? parseInt(req.query.limit) : 6;
 
+        //$ne means not including the current product(productId in route)
         const products = await Product.find({
             _id: {
                 $ne: req.product
