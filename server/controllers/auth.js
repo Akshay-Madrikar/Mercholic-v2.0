@@ -47,6 +47,7 @@ exports.signout = (req , res) => {
     });
 };
 
+// make sure we have cookie-parser installed to use expressJwt
 exports.requiredSignin = expressJwt({
     secret: process.env.JWT_SECRET,
     userProperty: 'auth'
